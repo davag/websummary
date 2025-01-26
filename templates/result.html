@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="result-container">
+    <h1>Summary Results</h1>
+    <div class="metadata">
+        <p><strong>Requested by:</strong> {{ name }}</p>
+        <p><strong>URL:</strong> <a href="{{ url }}" target="_blank">{{ url }}</a></p>
+    </div>
+    
+    <div class="summary-content">
+        {{ content | safe }}
+    </div>
+    
+    <div class="markdown-source">
+        <h3>Markdown Source:</h3>
+        <pre><code>{{ markdown_content }}</code></pre>
+    </div>
+    
+    <a href="{{ url_for('index') }}" class="button">Generate Another Summary</a>
+</div>
+{% endblock %} 
