@@ -5,8 +5,8 @@ from typing import List
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from IPython.display import Markdown, display, update_display
-# If using official openai library:
-# import openai
+from openai import OpenAI
+
 
 ###############################################################################
 # Initialize and constants
@@ -40,6 +40,10 @@ class Website:
         response = requests.get(url)
         self.body = response.content
         soup = BeautifulSoup(self.body, 'html.parser')
+        
+        # Add debug prints
+        print(f"Fetching {url}")
+        print(f"Response status: {response.status_code}")
 
         # Title
         self.title = soup.title.string if soup.title else "No title found"
@@ -193,19 +197,6 @@ def stream_brochure(company_name: str, url: str):
             # Optionally strip markdown fences for smoother streaming display
             response_stripped = response.replace("```", "").replace("markdown", "")
             update_display(Markdown(response_stripped), display_id=display_handle.display_id)
-
-import argparse
-
-def create_brochure(company_name, url):
-    response = openai.chat.completions.create(
-        model=MODEL,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": get_brochure_user_prompt(company_name, url)}
-          ],
-    )
-    result = response.choices[0].message.content
-    display(Markdown(result))
 
 def render_for_web(markdown_content: str) -> str:
     """

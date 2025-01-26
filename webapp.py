@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, flash
-from websummary import generate_website_summary
+from websummary import create_brochure
 import markdown
 
 app = Flask(__name__)
@@ -16,7 +16,7 @@ def index():
             return render_template('index.html')
         
         try:
-            markdown_content = generate_website_summary(url)
+            markdown_content = create_brochure(name, url)
             if markdown_content:
                 # Convert markdown to HTML for display
                 html_content = markdown.markdown(markdown_content)
