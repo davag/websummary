@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, send_file, session
 from websummary import create_brochure
 import markdown
 import os
+import io
 
 app = Flask(__name__)
 app.secret_key = 'development-key'  # Just for testing
@@ -22,13 +23,15 @@ def index():
         try:
             markdown_content = create_brochure(name, url)
             if markdown_content:
+                # Store markdown content in session for download
+                session['markdown_content'] = markdown_content
+                
                 # Convert markdown to HTML for display
                 html_content = markdown.markdown(markdown_content)
                 return render_template('result.html', 
                                     name=name, 
                                     url=url, 
-                                    content=html_content,
-                                    markdown_content=markdown_content)
+                                    content=html_content)
             else:
                 flash('Could not generate summary', 'error')
                 return render_template('index.html')
@@ -37,6 +40,21 @@ def index():
             return render_template('index.html')
             
     return render_template('index.html')
+
+@app.route('/download')
+def download():
+    markdown_content = session.get('markdown_content', '')
+    if markdown_content:
+        # Create a BytesIO object and write the markdown content to it
+        buffer = io.BytesIO()
+        buffer.write(markdown_content.encode('utf-8'))
+        buffer.seek(0)
+        
+        # Send the file as a downloadable attachment
+        return send_file(buffer, as_attachment=True, download_name='summary.md', mimetype='text/markdown')
+    else:
+        flash('No markdown content available for download', 'error')
+        return render_template('index.html')
 
 if __name__ == '__main__':
     # Enable debug mode for development

@@ -12,11 +12,41 @@
         {{ content | safe }}
     </div>
     
-    <div class="markdown-source">
-        <h3>Markdown Source:</h3>
-        <pre><code>{{ markdown_content }}</code></pre>
+    <!-- Button container for better layout -->
+    <div class="button-container">
+        <a href="{{ url_for('index') }}" class="button generate-button">Generate Another Summary</a>
+        
+        <form action="/download" method="get" class="download-form">
+            <button type="submit" class="button download-button">Download Markdown</button>
+        </form>
     </div>
-    
-    <a href="{{ url_for('index') }}" class="button">Generate Another Summary</a>
 </div>
+
+<style>
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        color: white;
+    }
+    .generate-button {
+        background-color: #4CAF50; /* Green */
+    }
+    .download-button {
+        background-color: #008CBA; /* Blue */
+    }
+    .button:hover {
+        opacity: 0.8;
+    }
+    .download-form {
+        margin: 0;
+    }
+</style>
 {% endblock %} 
