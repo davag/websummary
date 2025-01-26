@@ -4,4 +4,6 @@ python-dotenv
 openai
 IPython
 markdown2
-rich 
+rich
+flask
+markdown

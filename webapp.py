@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request, flash
 from websummary import create_brochure
 import markdown
+import os
 
 app = Flask(__name__)
 app.secret_key = 'development-key'  # Just for testing
+
+print("OPENAI_API_KEY present:", bool(os.getenv('OPENAI_API_KEY')))
+print("OPENAI_API_KEY length:", len(os.getenv('OPENAI_API_KEY', '')))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -36,4 +40,4 @@ def index():
 
 if __name__ == '__main__':
     # Enable debug mode for development
-    app.run(debug=True, port=5000) 
+    app.run(host='0.0.0.0', port=5000) 
