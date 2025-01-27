@@ -163,7 +163,7 @@ def get_brochure_user_prompt(company_name: str, url: str) -> str:
 
     return user_prompt
 
-def create_brochure(company_name: str, url: str):
+def create_brochure(company_name: str, url: str, language: str):
     response = openai.chat.completions.create(
         model=MODEL,
         messages=[
@@ -172,6 +172,18 @@ def create_brochure(company_name: str, url: str):
         ],
     )
     result = response.choices[0].message.content
+    
+    # Translate the summary to the selected language
+    if language != 'en':
+        translation_response = openai.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": "Translate the following text to " + language},
+                {"role": "user", "content": result}
+            ],
+        )
+        result = translation_response.choices[0].message.content
+    
     return result
 
 def stream_brochure(company_name: str, url: str):
@@ -227,10 +239,11 @@ def main():
     parser = argparse.ArgumentParser(description="Generate a company brochure.")
     parser.add_argument("--company", required=True, help="Company name")
     parser.add_argument("--url", required=True, help="Company website URL")
+    parser.add_argument("--language", required=True, help="Language for translation")
     args = parser.parse_args()
 
     # Generate brochure
-    markdown_brochure = create_brochure(args.company, args.url)
+    markdown_brochure = create_brochure(args.company, args.url, args.language)
 
     # Render for terminal during development
     render_in_terminal(markdown_brochure)

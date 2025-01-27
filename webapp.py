@@ -15,15 +15,16 @@ def index():
     if request.method == 'POST':
         name = request.form.get('name')
         url = request.form.get('url')
+        language = request.form.get('language')
         
         if not url:
             flash('Please enter a URL', 'error')
             return render_template('index.html')
         
         try:
-            markdown_content = create_brochure(name, url)
+            markdown_content = create_brochure(name, url, language)
             if markdown_content:
-                # Store markdown content in session for download
+                # Store content in session for download
                 session['markdown_content'] = markdown_content
                 
                 # Convert markdown to HTML for display
@@ -55,6 +56,13 @@ def download():
     else:
         flash('No markdown content available for download', 'error')
         return render_template('index.html')
+
+# Function to translate summary using OpenAI API
+def translate_summary(summary, language):
+    # Placeholder for OpenAI API call to translate the summary
+    # This function should call OpenAI API with the summary and target language
+    # and return the translated summary
+    return summary  # Replace with actual translation logic
 
 if __name__ == '__main__':
     # Enable debug mode for development

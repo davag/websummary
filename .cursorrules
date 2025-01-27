@@ -1,0 +1,7 @@
+I am learning Python and I am trying to write a script to summarize a company website.
+
+I have a script that works, but I want to make it more efficient and robust.
+
+Logging and best practices are important.
+
+# My app needs to run on Docker
